@@ -1,4 +1,4 @@
-package com.alpha.olsp.user;
+package com.alpha.olsp.model;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

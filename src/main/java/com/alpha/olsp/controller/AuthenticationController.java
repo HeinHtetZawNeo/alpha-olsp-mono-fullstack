@@ -1,9 +1,9 @@
-package com.alpha.olsp.unsecured;
+package com.alpha.olsp.controller;
 
-import com.alpha.olsp.auth.AuthenticationRequest;
-import com.alpha.olsp.auth.AuthenticationResponse;
-import com.alpha.olsp.auth.AuthenticationService;
-import com.alpha.olsp.auth.RegisterRequest;
+import com.alpha.olsp.dto.request.AuthenticationRequest;
+import com.alpha.olsp.dto.response.AuthenticationResponse;
+import com.alpha.olsp.service.AuthenticationService;
+import com.alpha.olsp.dto.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

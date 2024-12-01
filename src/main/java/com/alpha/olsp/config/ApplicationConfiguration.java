@@ -1,6 +1,6 @@
 package com.alpha.olsp.config;
 
-import com.alpha.olsp.user.repository.UserRepository;
+import com.alpha.olsp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

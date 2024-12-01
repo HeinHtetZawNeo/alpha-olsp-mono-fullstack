@@ -1,4 +1,4 @@
-package com.alpha.olsp.auth;
+package com.alpha.olsp.dto.response;
 
 public record AuthenticationResponse(
         String token

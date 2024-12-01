@@ -1,8 +1,11 @@
-package com.alpha.olsp.auth;
+package com.alpha.olsp.service;
 
 import com.alpha.olsp.config.JwtService;
-import com.alpha.olsp.user.User;
-import com.alpha.olsp.user.repository.UserRepository;
+import com.alpha.olsp.dto.request.AuthenticationRequest;
+import com.alpha.olsp.dto.request.RegisterRequest;
+import com.alpha.olsp.dto.response.AuthenticationResponse;
+import com.alpha.olsp.model.User;
+import com.alpha.olsp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

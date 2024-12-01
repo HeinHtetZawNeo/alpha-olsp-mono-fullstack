@@ -1,4 +1,4 @@
-package com.alpha.olsp.user;
+package com.alpha.olsp.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
