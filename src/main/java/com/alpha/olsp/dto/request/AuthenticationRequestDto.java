@@ -1,6 +1,6 @@
 package com.alpha.olsp.dto.request;
 
-public record AuthenticationRequest(
+public record AuthenticationRequestDto(
         String username,
         String password
 ) {

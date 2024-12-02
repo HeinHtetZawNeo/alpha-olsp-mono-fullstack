@@ -12,29 +12,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public enum Role {
-    ADMIN(
-            Set.of(
-                    Permission.ADMIN_WRITE,
-                    Permission.ADMIN_READ
-            )
-    ),
-    MEMBER(
-            Set.of(
-                    Permission.MEMBER_WRITE,
-                    Permission.MEMBER_READ
-            )
-    );
-
-    private final Set<Permission> permissions;
-
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + name()));
-        authorities.addAll(
-                permissions.stream()
-                        .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-                        .collect(Collectors.toList())
-        );
-        return authorities;
-    }
+    ADMIN,
+    SELLER,
+    CUSTOMER
 }

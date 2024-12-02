@@ -2,7 +2,7 @@ package com.alpha.olsp.dto.request;
 
 import com.alpha.olsp.model.Role;
 
-public record RegisterRequest(
+public record RegisterRequestDto(
         String firstName,
         String lastName,
         String username,

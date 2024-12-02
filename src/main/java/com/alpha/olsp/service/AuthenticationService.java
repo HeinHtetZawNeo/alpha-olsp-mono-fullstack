@@ -1,9 +1,9 @@
 package com.alpha.olsp.service;
 
 import com.alpha.olsp.config.JwtService;
-import com.alpha.olsp.dto.request.AuthenticationRequest;
-import com.alpha.olsp.dto.request.RegisterRequest;
-import com.alpha.olsp.dto.response.AuthenticationResponse;
+import com.alpha.olsp.dto.request.AuthenticationRequestDto;
+import com.alpha.olsp.dto.request.RegisterRequestDto;
+import com.alpha.olsp.dto.response.AuthenticationResponseDto;
 import com.alpha.olsp.model.User;
 import com.alpha.olsp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
-    public AuthenticationResponse register(RegisterRequest registerRequest) {
+    public AuthenticationResponseDto register(RegisterRequestDto registerRequest) {
         //Construct user object from registerRequest
         User user = new User(
                 registerRequest.firstName(),
@@ -37,10 +37,10 @@ public class AuthenticationService {
         User registeredUser = userRepository.save(user);
         //generate token
         String token = jwtService.generateToken(registeredUser);
-        return new AuthenticationResponse(token);
+        return new AuthenticationResponseDto(token);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponseDto authenticate(AuthenticationRequestDto authenticationRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.username(),
@@ -53,6 +53,6 @@ public class AuthenticationService {
         User user = (User)authentication.getPrincipal();
 //        User user = (User) userDetailsService.loadUserByUsername(authenticationRequest.username());
         String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        return new AuthenticationResponseDto(token);
     }
 }

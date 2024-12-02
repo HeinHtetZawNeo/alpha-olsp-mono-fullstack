@@ -12,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.alpha.olsp.model.Role;
-import com.alpha.olsp.model.Permission;
 
 @Configuration
 @EnableWebSecurity
@@ -30,13 +29,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         request ->
                                 request.requestMatchers("/api/v1/auth/*").permitAll()
-//                                        .requestMatchers("/api/v1/auth/authenticate").permitAll()
                                         .requestMatchers("/api/v1/admin/**").hasRole(Role.ADMIN.name())
-                                        .requestMatchers("/api/v1/management/**").hasAnyRole(Role.ADMIN.name(), Role.MEMBER.name())
-                                        .requestMatchers("/api/v1/management/member-only").hasAnyAuthority(
-                                                Permission.MEMBER_READ.getPermission(),
-                                                Permission.MEMBER_WRITE.getPermission()
-                                        )
                                         .anyRequest()
                                         .authenticated()
                 )

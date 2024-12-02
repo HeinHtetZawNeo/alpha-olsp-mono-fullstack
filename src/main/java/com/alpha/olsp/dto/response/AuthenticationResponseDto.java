@@ -1,6 +1,6 @@
 package com.alpha.olsp.dto.response;
 
-public record AuthenticationResponse(
+public record AuthenticationResponseDto(
         String token
 ) {
 }

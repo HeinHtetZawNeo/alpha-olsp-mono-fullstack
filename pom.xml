@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.alpha.olsp</groupId>
-    <artifactId>AlphaOnlineSystem</artifactId>
+    <artifactId>AlphaOnlineSystemApplication</artifactId>
     <version>0.0.1</version>
     <name>AlphaOnlineSystem</name>
 
