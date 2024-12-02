@@ -1,5 +1,6 @@
 package com.alpha.olsp.config;
 
+import com.alpha.olsp.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -20,14 +21,15 @@ public class JwtService {
     @Value("${jwt.secretkey}")
     public String SECRET;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User user) {
         String token = Jwts
                 .builder()
                 .issuedAt(new Date())
-                .issuer("edu.miu")
+                .issuer("com.alpha.olsp")
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .subject(userDetails.getUsername())//identity
-                .claim("authorities", populateAuthorities(userDetails))
+                .subject(user.getUsername())//identity
+                //.claim("authorities", populateAuthorities(userDetails))
+                .claim("role", "ROLE_"+user.getClass().getSimpleName().toUpperCase())
                 .signWith(signInKey())
                 .compact();
         return token;

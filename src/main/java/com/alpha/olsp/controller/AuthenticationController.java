@@ -2,6 +2,7 @@ package com.alpha.olsp.controller;
 
 import com.alpha.olsp.dto.request.AuthenticationRequestDto;
 import com.alpha.olsp.dto.response.AuthenticationResponseDto;
+import com.alpha.olsp.model.Admin;
 import com.alpha.olsp.service.AuthenticationService;
 import com.alpha.olsp.dto.request.RegisterRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +17,15 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody RegisterRequestDto registerRequest) {
-        AuthenticationResponseDto authenticationResponse = authenticationService.register(registerRequest);
+    @PostMapping("/a/register")
+    public ResponseEntity<AuthenticationResponseDto> adminRegister(@RequestBody Admin adminRequest) {
+        AuthenticationResponseDto authenticationResponse = authenticationService.adminRegister(adminRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(authenticationResponse);
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody AuthenticationRequestDto authenticationRequest) {
-        AuthenticationResponseDto authenticationResponse = authenticationService.authenticate(authenticationRequest);
-        return ResponseEntity.ok(authenticationResponse);
-    }
+//    @PostMapping("/authenticate")
+//    public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody AuthenticationRequestDto authenticationRequest) {
+//        AuthenticationResponseDto authenticationResponse = authenticationService.authenticate(authenticationRequest);
+//        return ResponseEntity.ok(authenticationResponse);
+//    }
 }
