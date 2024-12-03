@@ -8,9 +8,11 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +37,8 @@ public abstract class User implements UserDetails {
     private String firstName;
 
     private String lastName;
+    @Enumerated(EnumType.STRING)//to store the enum value as String
+    private Role role;
 
     private Boolean isAccountNonExpired = true;
     private Boolean isAccountNonLocked = true;
@@ -65,7 +69,9 @@ public abstract class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.getClass().getSimpleName().toUpperCase()));
+        return authorities;
     }
 
     @Override

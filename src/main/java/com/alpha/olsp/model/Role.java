@@ -14,5 +14,11 @@ import java.util.stream.Collectors;
 public enum Role {
     ADMIN,
     SELLER,
-    CUSTOMER
+    CUSTOMER;
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + name()));
+        return authorities;
+    }
 }

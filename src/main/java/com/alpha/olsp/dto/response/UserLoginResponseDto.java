@@ -12,6 +12,7 @@ public record UserLoginResponseDto(
         String firstName,
         String lastName,
         String role,
+        String token,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         Boolean isAccountNonExpired,

@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.alpha.olsp.model.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -28,8 +27,16 @@ public class SecurityConfiguration {
                 csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
                         request ->
-                                request.requestMatchers("/api/v1/auth/a/*").permitAll()
-                                        .requestMatchers("/api/v1/admin/**").hasRole(Role.ADMIN.name())
+                                request.requestMatchers(
+                                                "/api/v1/admin/register",
+                                                "/api/v1/seller/register",
+                                                "/api/v1/customer/register",
+                                                "/api/v1/auth/login").permitAll()
+                                        //For Admin Role
+                                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // Restrict to ROLE_ADMIN
+                                        .requestMatchers("/api/v1/seller/**").hasRole("SELLER") // Restrict to ROLE_SELLER
+                                        .requestMatchers("/api/v1/customer/**").hasRole("CUSTOMER") // Restrict to ROLE_CUSTOMER
+                                        //Register Endpoints
                                         .anyRequest()
                                         .authenticated()
                 )
@@ -39,6 +46,6 @@ public class SecurityConfiguration {
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http. build();
+        return http.build();
     }
 }

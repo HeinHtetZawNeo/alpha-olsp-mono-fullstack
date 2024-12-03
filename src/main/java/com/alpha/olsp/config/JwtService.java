@@ -28,7 +28,7 @@ public class JwtService {
                 .issuer("com.alpha.olsp")
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .subject(user.getUsername())//identity
-                //.claim("authorities", populateAuthorities(userDetails))
+//                .claim("authorities", populateAuthorities(user))
                 .claim("role", "ROLE_"+user.getClass().getSimpleName().toUpperCase())
                 .signWith(signInKey())
                 .compact();
