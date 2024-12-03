@@ -40,14 +40,6 @@ public class JwtService {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
     }
 
-    public String populateAuthorities(UserDetails userDetails) {
-        return userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-//                .map(authority -> authority.getAuthority())
-                .collect(Collectors.joining(","));
-    }
-
     public Claims getClaims(String token){
         return Jwts.parser()
                 .verifyWith(signInKey())

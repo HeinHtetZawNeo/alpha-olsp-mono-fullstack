@@ -28,30 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
-    //    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        logger.info("JWT Filter");
-//        String authorizationHeader = request.getHeader("Authorization");
-//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-//            //Extract the token
-//            String token = authorizationHeader.substring(7);
-//            //Extract username from token
-//            Claims claims = jwtService.getClaims(token);
-//            String username = claims.getSubject();
-//            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//                SecurityContextHolder.getContext().setAuthentication(
-//                        new UsernamePasswordAuthenticationToken(
-//                                username,
-//                                null,
-//                                userDetailsService.loadUserByUsername(username).getAuthorities()
-//                        )
-//                );
-//                System.out.println("Username: " + username);
-//                System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-//            }
-//        }
-//        filterChain.doFilter(request, response);
-//    }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -114,14 +90,5 @@ public class JwtFilter extends OncePerRequestFilter {
             default:
                 return null; // Invalid role
         }
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getServletPath();
-        return path.equals("/api/v1/admin/register") ||
-                path.equals("/api/v1/seller/register") ||
-                path.equals("/api/v1/customer/register") ||
-                path.equals("/api/v1/auth/login");
     }
 }
