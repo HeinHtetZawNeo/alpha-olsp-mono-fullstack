@@ -28,6 +28,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         request ->
                                 request.requestMatchers(
+                                                "/api/v1/products/**",
+                                                "/api/v1/catalogs/**",
                                                 "/api/v1/admin/register",
                                                 "/api/v1/seller/register",
                                                 "/api/v1/customer/register",

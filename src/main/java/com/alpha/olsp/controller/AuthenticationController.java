@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-    private final AdminService adminService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/login")
@@ -26,11 +25,5 @@ public class AuthenticationController {
         logger.info("Authentication request: {}", authenticationRequest);
         AuthenticationResponseDto authenticationResponse = authenticationService.authenticate(authenticationRequest);
         return ResponseEntity.ok(authenticationResponse);
-    }
-    @PostMapping("/a/register")
-    public ResponseEntity<AuthenticationResponseDto> adminRegister(@RequestBody Admin adminRequest) {
-        logger.info("Admin register request: {}", adminRequest);
-        AuthenticationResponseDto authenticationResponse = adminService.register(adminRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(authenticationResponse);
     }
 }

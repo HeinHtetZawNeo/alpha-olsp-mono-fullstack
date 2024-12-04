@@ -17,11 +17,11 @@ public class AlphaOnlineSystemApplication {
     public static void main(String[] args) {
         SpringApplication.run(AlphaOnlineSystemApplication.class, args);
     }
-//
-//    @Bean
-//    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-//        return args -> {
-//            stateRepository.save(new State("IA", "Iowa"));
-//        };
-//    }
+
+    @Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+        return args -> {
+            stateRepository.save(new State("IA", "Iowa"));
+        };
+    }
 }

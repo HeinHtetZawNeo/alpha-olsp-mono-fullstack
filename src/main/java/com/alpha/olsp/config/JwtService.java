@@ -2,24 +2,25 @@ package com.alpha.olsp.config;
 
 import com.alpha.olsp.model.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
 
     @Value("${jwt.secretkey}")
     public String SECRET;
+
+    private final Set<String> tokenBlacklist = new HashSet<>();
 
     public String generateToken(User user) {
         String token = Jwts

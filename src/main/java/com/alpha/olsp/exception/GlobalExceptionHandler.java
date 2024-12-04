@@ -4,23 +4,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<List<ErrorResponse>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<ErrorResponse> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> new ErrorResponse(
+                        "VALIDATION_ERROR",
+                        error.getField() + ": " + error.getDefaultMessage()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        logger.info("handleAccessDeniedException", ex);
+        return new ResponseEntity<>(new ErrorResponse("ACCESS_DENIED", ex.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
         logger.info("handleNoResourceFoundException", ex);
         return new ResponseEntity<>(new ErrorResponse("PATH_NOT_FOUND", ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleProductAlreadyExistsException(ProductAlreadyExistsException ex) {
+        logger.info("handleProductAlreadyExistsException", ex);
+        return new ResponseEntity<>(new ErrorResponse("PRODUCT_ALREADY_EXIST", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
@@ -50,7 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class) // Catch-all for unexpected exceptions
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
         logger.error("Unhandled exception: {}", ex.getMessage(), ex);
-        return new ResponseEntity<>(new ErrorResponse("INTERNAL_ERROR_GATEWAY", "An unexpected error occurred: " + ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ErrorResponse("INTERNAL_ERROR_GATEWAY", "An unexpected error occurred: " + ex.getClass().getSimpleName()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // ErrorResponse is a helper class for structured error responses
