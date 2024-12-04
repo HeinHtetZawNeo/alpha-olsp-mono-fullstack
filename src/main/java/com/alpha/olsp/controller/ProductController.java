@@ -1,6 +1,7 @@
 package com.alpha.olsp.controller;
 
 import com.alpha.olsp.dto.request.ProductRegisterDto;
+import com.alpha.olsp.dto.response.ProductDetailResponseDto;
 import com.alpha.olsp.dto.response.ProductResponseDto;
 import com.alpha.olsp.service.ProductService;
 import jakarta.validation.Valid;
@@ -37,5 +38,12 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.registerProduct(productRegisterDto,authorizationHeader));
+    }
+
+    @GetMapping("/{productid}")
+    public ResponseEntity<ProductDetailResponseDto> getProductDetail(@PathVariable("productid") String productid) {
+        logger.info("Get product {}", productid);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.getProductDetails(productid));
     }
 }

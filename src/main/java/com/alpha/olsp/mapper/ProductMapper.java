@@ -1,6 +1,7 @@
 package com.alpha.olsp.mapper;
 
 import com.alpha.olsp.dto.request.ProductRegisterDto;
+import com.alpha.olsp.dto.response.ProductDetailResponseDto;
 import com.alpha.olsp.dto.response.ProductResponseDto;
 import com.alpha.olsp.model.Product;
 import org.mapstruct.Mapper;
@@ -22,4 +23,12 @@ public interface ProductMapper {
     @Mapping(target = "stock", source = "stock")
     @Mapping(target = "catalog", ignore = true)
     Product fromProductRegisterDto(ProductRegisterDto productRegisterDto);
+
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "description", source = "description")
+    @Mapping(target = "price", source = "price")
+    @Mapping(target = "stock", source = "stock")
+    @Mapping(source = "catalog.id", target = "catalogId")
+    @Mapping(source = "catalog.name", target = "catalogName")
+    ProductDetailResponseDto toProductDetailResponseDto(Product product);
 }

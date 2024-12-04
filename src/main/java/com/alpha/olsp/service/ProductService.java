@@ -2,6 +2,7 @@ package com.alpha.olsp.service;
 
 import com.alpha.olsp.config.JwtService;
 import com.alpha.olsp.dto.request.ProductRegisterDto;
+import com.alpha.olsp.dto.response.ProductDetailResponseDto;
 import com.alpha.olsp.dto.response.ProductResponseDto;
 import com.alpha.olsp.exception.InvalidInputException;
 import com.alpha.olsp.exception.ProductAlreadyExistsException;
@@ -53,9 +54,6 @@ public class ProductService {
         Product product = ProductMapper.INSTANCE.fromProductRegisterDto(productRegisterDto);
         product.setSeller(seller);
         product.setCatalog(catalog);
-        logger.info("Product Name {}", product.getName());
-
-        logger.info("######registerProduct {}", product);
 
         return ProductMapper.INSTANCE.toProductResponseDto(productRepository.save(product));
     }
@@ -69,5 +67,13 @@ public class ProductService {
             throw new InvalidInputException("Unauthorized access for this user");
         });
         return seller;
+    }
+
+    public ProductDetailResponseDto getProductDetails(String productid) {
+        logger.info("getProductDetails {}", productid);
+        Product product = productRepository.findById(productid).orElseThrow(()->{
+            throw new InvalidInputException("Product not found");
+        });
+        return ProductMapper.INSTANCE.toProductDetailResponseDto(product);
     }
 }
