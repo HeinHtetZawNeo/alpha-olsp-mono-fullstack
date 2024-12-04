@@ -1,6 +1,7 @@
 package com.alpha.olsp.config;
 
 import com.alpha.olsp.model.User;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,9 +17,9 @@ import java.util.Date;
 
 @Service
 public class JwtService {
+    private final Dotenv dotenv = Dotenv.load();
 
-    @Value("${jwt.secretkey}")
-    public String SECRET;
+    public String SECRET= dotenv.get("JWT_SECRETKEY");
 
     private final Set<String> tokenBlacklist = new HashSet<>();
 

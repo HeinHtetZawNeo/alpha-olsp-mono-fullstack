@@ -2,6 +2,7 @@ package com.alpha.olsp.dto.response;
 
 import com.alpha.olsp.model.Catalog;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ProductDetailResponseDto(
         String id,
@@ -12,6 +13,7 @@ public record ProductDetailResponseDto(
         String catalogId,
         String catalogName,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        List<String> imageUrls
 ) {
 }

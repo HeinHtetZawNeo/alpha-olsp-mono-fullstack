@@ -18,15 +18,20 @@ public interface ProductMapper {
     @Mapping(target = "description", source = "description")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "stock", source = "stock")
+    @Mapping(target = "imageUrls", source = "imageUrls")
     ProductResponseDto toProductResponseDto(Product product);
 
     // Map ProductRegisterDto to Product
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "catalog", ignore = true)
+    @Mapping(target = "seller", ignore = true)
+    @Mapping(target = "imageUrls", ignore = true) // Assuming images will be set separately
     @Mapping(target = "name", source = "name")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "stock", source = "stock")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Product fromProductRegisterDto(ProductRegisterDto productRegisterDto);
 
     // Map Product to ProductDetailResponseDto
@@ -35,6 +40,7 @@ public interface ProductMapper {
     @Mapping(target = "description", source = "description")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "stock", source = "stock")
+    @Mapping(target = "imageUrls", source = "imageUrls")
     @Mapping(source = "catalog.id", target = "catalogId")
     @Mapping(source = "catalog.name", target = "catalogName")
     @Mapping(target = "createdAt", source = "createdAt")

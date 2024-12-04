@@ -18,7 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +31,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
     private final CatalogRepository catalogRepository;
+    private final BlobStorageService blobStorageService;
     private final JwtService jwtService;
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
@@ -38,14 +41,15 @@ public class ProductService {
         return products.stream().map(p -> ProductMapper.INSTANCE.toProductResponseDto(p)).collect(Collectors.toList());
     }
 
-    public ProductResponseDto registerProduct(ProductRegisterDto productRegisterDto, String authorizationHeader) {
+    public ProductResponseDto registerProduct(ProductRegisterDto productRegisterDto, String authorizationHeader, MultipartFile[] files) {
         logger.info("registerProduct {}", productRegisterDto);
 
         Seller seller = getSeller(authorizationHeader);
         Catalog catalog = catalogRepository.findById(productRegisterDto.catalogId())
                 .orElseThrow(() -> new InvalidInputException("Invalid Catalog ID"));
         logger.info("FoundCatalog {}", catalog);
-        //Validate Product is already exist for this seller
+
+        // Validate Product already exists for this seller
         productRepository.findBySeller_UserIDAndName(seller.getUserID(), productRegisterDto.name())
                 .ifPresent(product -> {
                     throw new ProductAlreadyExistsException(productRegisterDto.name() + " is already existed");
@@ -54,6 +58,10 @@ public class ProductService {
         Product product = ProductMapper.INSTANCE.fromProductRegisterDto(productRegisterDto);
         product.setSeller(seller);
         product.setCatalog(catalog);
+
+        // Store images in Azure Blob Storage
+        List<String> imageUrls = blobStorageService.storeFilesInAzureBlob(files);
+        product.setImageUrls(imageUrls); // Assuming you have an imageUrls field in the Product entity
 
         return ProductMapper.INSTANCE.toProductResponseDto(productRepository.save(product));
     }

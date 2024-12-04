@@ -10,10 +10,13 @@ import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,12 +35,15 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('SELLER')")
-    @PostMapping
-    public ResponseEntity<ProductResponseDto> registerProduct(@Valid @RequestBody ProductRegisterDto productRegisterDto, @RequestHeader("Authorization") String authorizationHeader) throws BadRequestException {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponseDto> registerProduct(
+            @ModelAttribute ProductRegisterDto productRegisterDto,
+            @RequestParam("files") MultipartFile[] files,
+            @RequestHeader("Authorization") String authorizationHeader) throws IOException {
         logger.info("Register product {}", productRegisterDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.registerProduct(productRegisterDto,authorizationHeader));
+                .body(productService.registerProduct(productRegisterDto, authorizationHeader, files));
     }
 
     @GetMapping("/{productid}")
