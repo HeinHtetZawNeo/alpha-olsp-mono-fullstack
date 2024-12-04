@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,11 +28,19 @@ public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getProducts() {
-        logger.info("Get products");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(productService.getAllProducts());
+    public ResponseEntity<Page<ProductResponseDto>> getProducts(
+            @RequestParam(required = false) String catalogId,
+            @RequestParam(required = false) String productName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+
+        logger.info("Get products with filters - catalogId: {}, productName: {}, page: {}, size: {}, sortBy: {}, sortDirection: {}",
+                catalogId, productName, page, size, sortBy, sortDirection);
+
+        Page<ProductResponseDto> products = productService.getFilteredProducts(catalogId, productName, page, size, sortBy, sortDirection);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @PreAuthorize("hasRole('SELLER')")
