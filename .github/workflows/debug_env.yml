@@ -14,10 +14,10 @@ jobs:
       # Step 2: Set environment variables
       - name: Set Environment Variables
         env:
-          ENV_DATASOURCE_URL: ${{ myenv.ENV_DATASOURCE_URL }}
-          ENV_DATASOURCE_USERNAME: ${{ myenv.ENV_DATASOURCE_USERNAME }}
-          ENV_DATASOURCE_PASSWORD: ${{ myenv.ENV_DATASOURCE_PASSWORD }}
-          JWT_SECRETKEY: ${{ myenv.JWT_SECRETKEY }}
+          ENV_DATASOURCE_URL: ${{ secrets.ENV_DATASOURCE_URL }}
+          ENV_DATASOURCE_USERNAME: ${{ secrets.ENV_DATASOURCE_USERNAME }}
+          ENV_DATASOURCE_PASSWORD: ${{ secrets.ENV_DATASOURCE_PASSWORD }}
+          JWT_SECRETKEY: ${{ secrets.JWT_SECRETKEY }}
         run: |
           echo "Printing Environment Variables:"
           echo "ENV_DATASOURCE_URL: $ENV_DATASOURCE_URL"
