@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: target/*.jar
+          path: target/alpha-olsp.jar
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,9 +48,9 @@ jobs:
         with:
           name: java-app
 
-      # Step 2: Debug environment variables
-      #- name: Debug Environment Variables
-      #  run: printenv | grep -e ENV_ -e  || true
+      # Step 2: Debug downloaded files
+      - name: List downloaded files
+        run: ls -R
 
       # Step 3: Set environment variables for Azure Web App
       - name: Set environment variables
@@ -77,5 +77,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'alpha-olsp'
-          package: java-app/*.jar
+          package: java-app/alpha-olsp.jar
           enable-oryx-build: false # Ensures JAR deployment is straightforward
