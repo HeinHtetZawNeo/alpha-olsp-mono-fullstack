@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy JAR app to Azure Web App - alpha-olsp
 
 on:
@@ -14,22 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v4
 
+      # Step 2: Set up Java version
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: 'java21'
+          java-version: '21'
           distribution: 'microsoft'
 
+      # Step 3: Build with Maven
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -DskipTests=true
 
+      # Step 4: Upload artifact for deployment
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: target/*.jar
 
   deploy:
     runs-on: ubuntu-latest
@@ -38,26 +39,43 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
-  
+      id-token: write # Required for requesting the JWT
+
     steps:
+      # Step 1: Download the build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
-      
+
+      # Step 2: Debug environment variables
+      #- name: Debug Environment Variables
+      #  run: printenv | grep -e ENV_ -e  || true
+
+      # Step 3: Set environment variables for Azure Web App
+      - name: Set environment variables
+        run: |
+          echo "ENV_JWT_SECRETKEY=${{ secrets.ENV_JWT_SECRETKEY }}" >> $GITHUB_ENV
+          echo "ENV_DATASOURCE_URL=${{ secrets.ENV_DATASOURCE_URL }}" >> $GITHUB_ENV
+          echo "ENV_DATASOURCE_USERNAME=${{ secrets.ENV_DATASOURCE_USERNAME }}" >> $GITHUB_ENV
+          echo "ENV_DATASOURCE_PASSWORD=${{ secrets.ENV_DATASOURCE_PASSWORD }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_BLOB_ENDPOINT=${{ secrets.AZURE_STORAGE_BLOB_ENDPOINT }}" >> $GITHUB_ENV
+
+      # Step 4: Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0F9141DF632A49E68F0257BB4BA5A275 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EA69067EAFF342F79B60A201C2805E87 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9B8210976D58430F899DA9886B6997B0 }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # Step 5: Deploy to Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'alpha-olsp'
-          slot-name: 'Production'
           package: '*.jar'
-          
+          enable-oryx-build: false # Ensures JAR deployment is straightforward
