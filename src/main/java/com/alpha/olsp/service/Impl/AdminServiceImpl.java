@@ -29,6 +29,6 @@ public class AdminServiceImpl implements AdminService {
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
         String token = jwtService.generateToken(adminRepository.save(admin));
-        return new AuthenticationResponseDto(token,admin.getEmail(),admin.getClass().getSimpleName().toUpperCase());
+        return new AuthenticationResponseDto(token, admin.getEmail(), admin.getClass().getSimpleName().toUpperCase());
     }
 }

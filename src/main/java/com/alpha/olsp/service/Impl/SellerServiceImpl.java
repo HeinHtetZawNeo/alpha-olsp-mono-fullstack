@@ -29,6 +29,6 @@ public class SellerServiceImpl implements SellerService {
         seller.setPassword(passwordEncoder.encode(seller.getPassword()));
 
         String token = jwtService.generateToken(sellerRepository.save(seller));
-        return new AuthenticationResponseDto(token,seller.getEmail(),seller.getClass().getSimpleName().toUpperCase());
+        return new AuthenticationResponseDto(token, seller.getEmail(), seller.getClass().getSimpleName().toUpperCase());
     }
 }

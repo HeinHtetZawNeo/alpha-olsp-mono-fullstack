@@ -17,14 +17,10 @@ import java.util.UUID;
 @Service
 public class BlobStorageServiceImpl implements BlobStorageService {
     private final Dotenv dotenv = Dotenv.load();
-
-    private String accountName= dotenv.get("AZURE_STORAGE_ACCOUNT_NAME");
-
-    private String accountKey= dotenv.get("AZURE_STORAGE_ACCOUNT_KEY");
-
-    private String endpoint= dotenv.get("AZURE_STORAGE_BLOB_ENDPOINT");
-
     private final String containerName = "product-image-container";
+    private final String accountName = dotenv.get("AZURE_STORAGE_ACCOUNT_NAME");
+    private final String accountKey = dotenv.get("AZURE_STORAGE_ACCOUNT_KEY");
+    private final String endpoint = dotenv.get("AZURE_STORAGE_BLOB_ENDPOINT");
 
     @Override
     public BlobContainerClient getBlobContainerClient() {

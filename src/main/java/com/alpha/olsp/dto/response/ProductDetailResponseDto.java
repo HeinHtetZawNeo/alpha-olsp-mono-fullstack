@@ -1,6 +1,5 @@
 package com.alpha.olsp.dto.response;
 
-import com.alpha.olsp.model.Catalog;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -20,7 +20,7 @@ public class OrderItem {
     @Id
     private String id = UUID.randomUUID().toString();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -36,6 +36,13 @@ public class OrderItem {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public OrderItem(Product product, Integer quantity, Double price, OrderItemStatus status) {
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+        this.status = status;
+    }
 
     public OrderItemStatus getStatus() {
         return status;

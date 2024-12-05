@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // Restrict to ROLE_ADMIN
                                         .requestMatchers("/api/v1/seller/**").hasRole("SELLER") // Restrict to ROLE_SELLER
                                         .requestMatchers("/api/v1/customer/**").hasRole("CUSTOMER") // Restrict to ROLE_CUSTOMER
+                                        .requestMatchers("/api/v1/orders/**").hasAnyRole("CUSTOMER", "SELLER", "ADMIN")
                                         //Register Endpoints
                                         .anyRequest()
                                         .authenticated()

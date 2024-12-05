@@ -12,7 +12,6 @@ import java.util.List;
 public interface CatalogMapper {
     CatalogMapper INSTANCE = Mappers.getMapper(CatalogMapper.class);
 
-
     CatalogResponseDto toCatalogResponseDto(Catalog catalog);
 
     List<CatalogResponseDto> toCatalogResponseDtos(List<Catalog> catalogs);

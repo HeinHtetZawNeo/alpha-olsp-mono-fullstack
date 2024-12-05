@@ -3,8 +3,8 @@ package com.alpha.olsp.controller;
 
 import com.alpha.olsp.dto.request.OrderRequestDto;
 import com.alpha.olsp.dto.response.OrderResponseDto;
-import com.alpha.olsp.model.OrderItemStatus;
 import com.alpha.olsp.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,26 +12,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderService orderService;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+    private final OrderService orderService;
 
     @PreAuthorize("hasRole('CUSTOMER')")
-    @PatchMapping("/")
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto) {
+    public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto, @RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Create order: {}", orderRequestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orderService.createOrder(orderRequestDto));
+                .body(orderService.createOrder(orderRequestDto, authorizationHeader));
     }
-
+/*
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @PatchMapping("/")
     @GetMapping
     public ResponseEntity<List<OrderResponseDto>> getOrders(@RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Get all orders");
@@ -66,5 +65,5 @@ public class OrderController {
         logger.info("Update status of order item {} to {}", itemId, status);
         orderService.updateOrderItemStatus(itemId, status);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
+    }*/
 }

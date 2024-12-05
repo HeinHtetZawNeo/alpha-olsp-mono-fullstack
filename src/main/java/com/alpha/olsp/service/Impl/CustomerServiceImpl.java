@@ -29,6 +29,6 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
 
         String token = jwtService.generateToken(customerRepository.save(customer));
-        return new AuthenticationResponseDto(token,customer.getEmail(),customer.getClass().getSimpleName().toUpperCase());
+        return new AuthenticationResponseDto(token, customer.getEmail(), customer.getClass().getSimpleName().toUpperCase());
     }
 }

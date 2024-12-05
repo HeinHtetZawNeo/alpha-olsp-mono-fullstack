@@ -1,21 +1,19 @@
 package com.alpha.olsp.service.Impl;
 
-import com.alpha.olsp.config.JwtService;
 import com.alpha.olsp.dto.request.ProductRegisterDto;
 import com.alpha.olsp.dto.response.ProductDetailResponseDto;
 import com.alpha.olsp.dto.response.ProductResponseDto;
 import com.alpha.olsp.exception.InvalidInputException;
 import com.alpha.olsp.exception.ProductAlreadyExistsException;
+import com.alpha.olsp.helper.Util;
 import com.alpha.olsp.mapper.ProductMapper;
 import com.alpha.olsp.model.Catalog;
 import com.alpha.olsp.model.Product;
 import com.alpha.olsp.model.Seller;
 import com.alpha.olsp.repository.CatalogRepository;
 import com.alpha.olsp.repository.ProductRepository;
-import com.alpha.olsp.repository.SellerRepository;
 import com.alpha.olsp.service.BlobStorageService;
 import com.alpha.olsp.service.ProductService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,19 +28,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductServiceImpl  implements ProductService {
+public class ProductServiceImpl implements ProductService {
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
-    private final SellerRepository sellerRepository;
     private final CatalogRepository catalogRepository;
     private final BlobStorageService blobStorageService;
-    private final JwtService jwtService;
-    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+    private final Util util;
 
     @Override
     public ProductResponseDto registerProduct(ProductRegisterDto productRegisterDto, String authorizationHeader, MultipartFile[] files) {
         logger.info("registerProduct {}", productRegisterDto);
 
-        Seller seller = getSeller(authorizationHeader);
+        Seller seller = util.getSeller(authorizationHeader);
         Catalog catalog = catalogRepository.findById(productRegisterDto.catalogId())
                 .orElseThrow(() -> new InvalidInputException("Invalid Catalog ID"));
         logger.info("FoundCatalog {}", catalog);
@@ -62,18 +59,6 @@ public class ProductServiceImpl  implements ProductService {
         product.setImageUrls(imageUrls); // Assuming you have an imageUrls field in the Product entity
 
         return ProductMapper.INSTANCE.toProductResponseDto(productRepository.save(product));
-    }
-
-    @Override
-    public Seller getSeller(String authorizationHeader) {
-        String token = authorizationHeader.substring(7);
-        Claims claims = jwtService.getClaims(token);
-        String email = claims.getSubject();
-        //Validate the Seller
-        Seller seller = sellerRepository.findByEmail(email).orElseThrow(() -> {
-            throw new InvalidInputException("Unauthorized access for this user");
-        });
-        return seller;
     }
 
     @Override

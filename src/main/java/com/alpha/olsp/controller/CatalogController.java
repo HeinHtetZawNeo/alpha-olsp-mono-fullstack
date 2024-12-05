@@ -17,8 +17,8 @@ import java.util.List;
 @RequestMapping("/api/v1/catalogs")
 @RequiredArgsConstructor
 public class CatalogController {
-    private final CatalogService catalogService;
     private static final Logger logger = LoggerFactory.getLogger(CatalogController.class);
+    private final CatalogService catalogService;
 
     @GetMapping
     public ResponseEntity<List<CatalogResponseDto>> getCatalogs() {

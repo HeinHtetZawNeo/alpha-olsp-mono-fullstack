@@ -19,4 +19,8 @@ public class Customer extends User {
     private Address address;
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
+
+    public String getCustomerId() {
+        return super.getUserID();
+    }
 }

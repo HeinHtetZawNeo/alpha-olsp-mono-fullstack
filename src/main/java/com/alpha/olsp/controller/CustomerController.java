@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private final CustomerService customerService;
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+    private final CustomerService customerService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseDto> adminRegister(@RequestBody Customer customerRequest) {

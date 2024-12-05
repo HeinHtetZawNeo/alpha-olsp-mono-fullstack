@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SellerController {
 
-    private final SellerService sellerService;
     private static final Logger logger = LoggerFactory.getLogger(SellerController.class);
+    private final SellerService sellerService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseDto> adminRegister(@RequestBody Seller sellerRequest) {

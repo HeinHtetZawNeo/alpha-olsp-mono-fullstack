@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final AdminService adminService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private final AdminService adminService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseDto> adminRegister(@RequestBody Admin adminRequest) {

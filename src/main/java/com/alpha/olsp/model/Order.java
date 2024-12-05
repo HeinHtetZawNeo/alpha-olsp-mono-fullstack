@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +40,25 @@ public class Order {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public Order(Customer customer, List<OrderItem> items, Double totalAmount, OrderStatus status) {
+        this.customer = customer;
+        this.items = items;
+        this.totalAmount = totalAmount;
+        this.status = status;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (updatedAt == null) {
+            updatedAt = LocalDateTime.now();
+        } else if (updatedAt.isBefore(LocalDateTime.now())) {
+            updatedAt = LocalDateTime.now();
+        }
+    }
 
     public void updateStatus() {
         if (this.items.stream().allMatch(item -> item.getStatus() == OrderItemStatus.DELIVERED)) {
