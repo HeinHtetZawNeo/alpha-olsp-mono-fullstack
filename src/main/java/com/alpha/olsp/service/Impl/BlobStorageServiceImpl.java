@@ -5,7 +5,7 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
-import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,11 +16,14 @@ import java.util.UUID;
 
 @Service
 public class BlobStorageServiceImpl implements BlobStorageService {
-    private final Dotenv dotenv = Dotenv.load();
+    //private final Dotenv dotenv = Dotenv.load();
     private final String containerName = "product-image-container";
-    private final String accountName = dotenv.get("AZURE_STORAGE_ACCOUNT_NAME");
-    private final String accountKey = dotenv.get("AZURE_STORAGE_ACCOUNT_KEY");
-    private final String endpoint = dotenv.get("AZURE_STORAGE_BLOB_ENDPOINT");
+    @Value("${azure.storage.account.name}")
+    String accountName;
+    @Value("${azure.storage.account.key}")
+    String accountKey;
+    @Value("${azure.storage.blob.endpoint}")
+    String endpoint;
 
     @Override
     public BlobContainerClient getBlobContainerClient() {

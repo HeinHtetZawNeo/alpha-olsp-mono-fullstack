@@ -11,17 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v4
 
+      # Step 2: Set up Java version
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'microsoft'
 
+      # Step 3: Build with Maven
       - name: Build with Maven
         run: mvn clean install
 
+      # Step 4: Upload artifact for deployment
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -36,13 +40,26 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write # Required for requesting the JWT
-  
+
     steps:
+      # Step 1: Download the build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
-      
+
+      # Step 2: Set environment variables for Azure Web App
+      - name: Set environment variables
+        run: |
+          echo "JWT_SECRETKEY=${{ secrets.JWT_SECRETKEY }}" >> $GITHUB_ENV
+          echo "ENV_DATASOURCE_URL=${{ secrets.ENV_DATASOURCE_URL }}" >> $GITHUB_ENV
+          echo "ENV_DATASOURCE_USERNAME=${{ secrets.ENV_DATASOURCE_USERNAME }}" >> $GITHUB_ENV
+          echo "ENV_DATASOURCE_PASSWORD=${{ secrets.ENV_DATASOURCE_PASSWORD }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> $GITHUB_ENV
+          echo "AZURE_STORAGE_BLOB_ENDPOINT=${{ secrets.AZURE_STORAGE_BLOB_ENDPOINT }}" >> $GITHUB_ENV
+
+      # Step 3: Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -50,9 +67,11 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # Step 4: Deploy to Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'alpha-olsp'
           package: '*.jar'
+          enable-oryx-build: false # Ensures JAR deployment is straightforward

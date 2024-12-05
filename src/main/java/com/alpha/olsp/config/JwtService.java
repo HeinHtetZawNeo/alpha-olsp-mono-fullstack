@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -15,9 +16,9 @@ import java.util.Set;
 
 @Service
 public class JwtService {
-    private final Dotenv dotenv = Dotenv.load();
     private final Set<String> tokenBlacklist = new HashSet<>();
-    public String SECRET = dotenv.get("JWT_SECRETKEY");
+    @Value("${jwt.secret}")
+    public String SECRET;
 
     public String generateToken(User user) {
         String token = Jwts
