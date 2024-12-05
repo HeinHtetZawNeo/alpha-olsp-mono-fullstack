@@ -55,7 +55,7 @@ jobs:
       # Step 3: Set environment variables for Azure Web App
       - name: Set environment variables
         run: |
-          echo "JWT_SECRETKEY=${{ secrets.ENV_JWT_SECRETKEY }}" >> $GITHUB_ENV
+          echo "ENV_JWT_SECRETKEY=${{ secrets.ENV_JWT_SECRETKEY }}" >> $GITHUB_ENV
           echo "ENV_DATASOURCE_URL=${{ secrets.ENV_DATASOURCE_URL }}" >> $GITHUB_ENV
           echo "ENV_DATASOURCE_USERNAME=${{ secrets.ENV_DATASOURCE_USERNAME }}" >> $GITHUB_ENV
           echo "ENV_DATASOURCE_PASSWORD=${{ secrets.ENV_DATASOURCE_PASSWORD }}" >> $GITHUB_ENV
@@ -67,9 +67,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0F9141DF632A49E68F0257BB4BA5A275 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EA69067EAFF342F79B60A201C2805E87 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9B8210976D58430F899DA9886B6997B0 }}
 
       # Step 5: Deploy to Azure Web App
       - name: Deploy to Azure Web App
