@@ -42,8 +42,8 @@ jobs:
       id-token: write # Required for requesting the JWT
 
     steps:
-      - - name: Debug Environment Variables
-          run: printenv | grep ENV_DATASOURCE_URL
+      - name: Debug Environment Variables
+        run: printenv | grep ENV_DATASOURCE_URL
       # Step 1: Download the build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
