@@ -42,7 +42,7 @@ public class OrderController {
                 .body(orderService.getOrders(authorizationHeader));
     }
     @PreAuthorize("hasRole('SELLER')")
-    @GetMapping("/getOrders")
+    @GetMapping("/items")
     public ResponseEntity<List<OrderItemResponseDto>> getSellerOrders(@RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Get all seller orders");
         return ResponseEntity
