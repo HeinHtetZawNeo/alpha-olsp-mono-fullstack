@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface CatalogRepository extends JpaRepository<Catalog, String> {
     Optional<Catalog> findById(String name);
     List<Catalog> findAllByParentCatalogIsNull();
+    Boolean existsByName(String name);
 }
