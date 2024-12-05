@@ -76,6 +76,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'alpha-olsp'
-          package: '*.jar'
+          app-name: 'app'
+          package: 'target/*.jar'
           enable-oryx-build: false # Ensures JAR deployment is straightforward
