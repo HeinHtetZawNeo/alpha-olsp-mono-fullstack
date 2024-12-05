@@ -42,7 +42,7 @@ public class Util {
         });
     }
 
-    private String getEmailFromToken(String authorizationHeader) {
+    public String getEmailFromToken(String authorizationHeader) {
         String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
         Claims claims = jwtService.getClaims(token); // Get claims using the JwtService
         return claims.getSubject(); // Extract the subject (email)

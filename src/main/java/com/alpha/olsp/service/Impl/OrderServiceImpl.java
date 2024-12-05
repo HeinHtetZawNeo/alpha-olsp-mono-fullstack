@@ -1,20 +1,20 @@
 package com.alpha.olsp.service.Impl;
 
 import com.alpha.olsp.dto.request.OrderRequestDto;
+import com.alpha.olsp.dto.response.OrderItemResponseDto;
 import com.alpha.olsp.dto.response.OrderResponseDto;
 import com.alpha.olsp.exception.ResourceNotFoundException;
 import com.alpha.olsp.helper.Util;
 import com.alpha.olsp.mapper.OrderMapper;
 import com.alpha.olsp.model.*;
-import com.alpha.olsp.repository.CustomerRepository;
-import com.alpha.olsp.repository.OrderRepository;
-import com.alpha.olsp.repository.ProductRepository;
+import com.alpha.olsp.repository.*;
 import com.alpha.olsp.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,14 +22,15 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final Util util;
+    private final OrderItemRepository orderItemRepository;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String token) {
+    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String authorizationHeader) {
         // Get the customer from the token
-        Customer customer = util.getCustomer(token);
+        Customer customer = util.getCustomer(authorizationHeader);
 
         // Map OrderRequestDto items to OrderItem and update product quantities
         List<OrderItem> items = orderRequestDto.items().stream().map(itemRequest -> {
@@ -71,10 +72,34 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDto> getOrders() {
-        return orderRepository.findAll().stream()
+    public List<OrderResponseDto> getOrders(String authorizationHeader) {
+        String email = util.getEmailFromToken(authorizationHeader);
+
+        Optional<User> user = userRepository.findByUsername(email);
+        User found = user.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        List<Order> orders = List.of();
+        switch (found.getClass().getSimpleName().toUpperCase()) {
+            case "CUSTOMER":
+                orders = orderRepository.findByCustomerUserID(found.getUserID());
+                break;
+            case "ADMIN":
+                orders = orderRepository.findAll();
+                break;
+            default:
+                throw new ResourceNotFoundException("Invalid role");
+        }
+
+        return orders.stream()
                 .map(OrderMapper.INSTANCE::toOrderResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderItemResponseDto> getSellerOrders(String authorizationHeader) {
+        Seller seller = util.getSeller(authorizationHeader);
+
+        return orderItemRepository.findAllBySellerId(seller.getUserID()).stream().map(OrderMapper.INSTANCE::toOrderItemResponseDto).collect(Collectors.toList());
     }
 
     @Override

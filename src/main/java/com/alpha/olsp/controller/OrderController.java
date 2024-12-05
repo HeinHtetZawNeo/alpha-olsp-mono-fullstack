@@ -2,7 +2,9 @@ package com.alpha.olsp.controller;
 
 
 import com.alpha.olsp.dto.request.OrderRequestDto;
+import com.alpha.olsp.dto.response.OrderItemResponseDto;
 import com.alpha.olsp.dto.response.OrderResponseDto;
+import com.alpha.olsp.model.OrderItem;
 import com.alpha.olsp.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -28,17 +32,24 @@ public class OrderController {
                 .status(HttpStatus.CREATED)
                 .body(orderService.createOrder(orderRequestDto, authorizationHeader));
     }
-/*
-    @PreAuthorize("hasRole('CUSTOMER')")
-    @PatchMapping("/")
+
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     @GetMapping
     public ResponseEntity<List<OrderResponseDto>> getOrders(@RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Get all orders");
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orderService.getOrders());
+                .body(orderService.getOrders(authorizationHeader));
     }
-
+    @PreAuthorize("hasRole('SELLER')")
+    @GetMapping("/getOrders")
+    public ResponseEntity<List<OrderItemResponseDto>> getSellerOrders(@RequestHeader("Authorization") String authorizationHeader) {
+        logger.info("Get all seller orders");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orderService.getSellerOrders(authorizationHeader));
+    }
+/*
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable String id) {
         logger.info("Get order by ID: {}", id);
