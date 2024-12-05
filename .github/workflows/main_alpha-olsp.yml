@@ -49,8 +49,8 @@ jobs:
           name: java-app
 
       # Step 2: Debug environment variables
-      - name: Debug Environment Variables
-        run: printenv | grep -e ENV_ -e ENV_JWT_SECRETKEY
+      #- name: Debug Environment Variables
+      #  run: printenv | grep -e ENV_ -e  || true
 
       # Step 3: Set environment variables for Azure Web App
       - name: Set environment variables
