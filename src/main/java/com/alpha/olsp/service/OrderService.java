@@ -13,13 +13,9 @@ public interface OrderService {
 
     List<OrderResponseDto> getOrders(String token);
 
-    OrderResponseDto getOrderById(String id);
+    OrderResponseDto getOrderById(String id,String token);
 
-    void deleteOrder(String id);
-
-    void updateOrderStatus(String orderId, OrderStatus status);
-
-    void updateOrderItemStatus(String itemId, OrderItemStatus status);
+    void updateOrderItemStatus(String itemId, OrderItemStatus status,String token);
 
     List<OrderItemResponseDto> getSellerOrders(String authorizationHeader);
 }

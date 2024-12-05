@@ -4,7 +4,6 @@ package com.alpha.olsp.controller;
 import com.alpha.olsp.dto.request.OrderRequestDto;
 import com.alpha.olsp.dto.response.OrderItemResponseDto;
 import com.alpha.olsp.dto.response.OrderResponseDto;
-import com.alpha.olsp.model.OrderItem;
 import com.alpha.olsp.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.alpha.olsp.model.OrderItemStatus;
 
 import java.util.List;
 
@@ -49,32 +49,23 @@ public class OrderController {
                 .status(HttpStatus.OK)
                 .body(orderService.getSellerOrders(authorizationHeader));
     }
-/*
+
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable String id) {
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable String id,@RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Get order by ID: {}", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orderService.getOrderById(id));
+                .body(orderService.getOrderById(id,authorizationHeader));
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable String id) {
-        logger.info("Delete order by ID: {}", id);
-        orderService.deleteOrder(id);
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    }
-
 
     @PreAuthorize("hasRole('SELLER')")
     @PatchMapping("/items/{itemId}/status")
     public ResponseEntity<Void> updateOrderItemStatus(
             @PathVariable String itemId,
-            @RequestParam OrderItemStatus status) {
+            @RequestParam OrderItemStatus status,
+            @RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Update status of order item {} to {}", itemId, status);
-        orderService.updateOrderItemStatus(itemId, status);
+        orderService.updateOrderItemStatus(itemId, status,authorizationHeader);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }*/
+    }
 }

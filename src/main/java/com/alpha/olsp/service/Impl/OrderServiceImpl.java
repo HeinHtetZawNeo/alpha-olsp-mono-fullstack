@@ -10,6 +10,7 @@ import com.alpha.olsp.model.*;
 import com.alpha.olsp.repository.*;
 import com.alpha.olsp.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,26 +104,67 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDto getOrderById(String id) {
+    public OrderResponseDto getOrderById(String id,String authorizationHeader) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        Optional<User> user = userRepository.findByUsername(util.getEmailFromToken(authorizationHeader));
+
+        User found = user.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        switch (found.getClass().getSimpleName().toUpperCase()) {
+            case "CUSTOMER":
+                if(!order.getCustomer().getUserID().equals(found.getUserID()))
+                    throw new BadCredentialsException("Invalid user");
+                break;
+            case "SELLER":
+                throw new BadCredentialsException("Invalid user");
+        }
         return OrderMapper.INSTANCE.toOrderResponseDto(order);
     }
 
     @Override
-    public void deleteOrder(String id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
-        orderRepository.delete(order);
+    public void updateOrderItemStatus(String itemId, OrderItemStatus status, String authorizationHeader) {
+        // Retrieve the seller from the authorization token
+        Seller seller = util.getSeller(authorizationHeader);
+
+        // Find the OrderItem by its ID
+        OrderItem orderItem = orderItemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("OrderItem not found"));
+
+        // Validate that the seller owns the product associated with the OrderItem
+        if (!orderItem.getProduct().getSeller().getUserID().equals(seller.getUserID())) {
+            throw new BadCredentialsException("Seller does not own this product");
+        }
+
+        // Validate the allowed status transitions
+        OrderItemStatus currentStatus = orderItem.getStatus();
+        if (!isValidStatusTransition(currentStatus, status)) {
+            throw new IllegalStateException("Invalid status transition: " + currentStatus + " -> " + status);
+        }
+
+        // Update the status of the OrderItem
+        orderItem.setStatus(status);
+
+        // Update the order's status
+        Order order = orderRepository.findByOrderItemId(orderItem.getId()).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.updateStatus();
+
+        // Save the changes
+        orderItemRepository.save(orderItem);
+        orderRepository.save(order);
     }
 
-    @Override
-    public void updateOrderStatus(String orderId, OrderStatus status) {
-
-    }
-
-    @Override
-    public void updateOrderItemStatus(String itemId, OrderItemStatus status) {
-
+    private boolean isValidStatusTransition(OrderItemStatus currentStatus, OrderItemStatus newStatus) {
+        switch (currentStatus) {
+            case PENDING:
+                return newStatus == OrderItemStatus.PACKED;
+            case PACKED:
+                return newStatus == OrderItemStatus.SHIPPED;
+            case SHIPPED:
+                return newStatus == OrderItemStatus.DELIVERED;
+            default:
+                return false;
+        }
     }
 }
