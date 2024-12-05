@@ -42,18 +42,20 @@ jobs:
       id-token: write # Required for requesting the JWT
 
     steps:
-      - name: Debug Environment Variables
-        run: printenv | grep ENV_DATASOURCE_URL
       # Step 1: Download the build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
 
-      # Step 2: Set environment variables for Azure Web App
+      # Step 2: Debug environment variables
+      - name: Debug Environment Variables
+        run: printenv | grep -e ENV_ -e ENV_JWT_SECRETKEY
+
+      # Step 3: Set environment variables for Azure Web App
       - name: Set environment variables
         run: |
-          echo "JWT_SECRETKEY=${{ secrets.JWT_SECRETKEY }}" >> $GITHUB_ENV
+          echo "JWT_SECRETKEY=${{ secrets.ENV_JWT_SECRETKEY }}" >> $GITHUB_ENV
           echo "ENV_DATASOURCE_URL=${{ secrets.ENV_DATASOURCE_URL }}" >> $GITHUB_ENV
           echo "ENV_DATASOURCE_USERNAME=${{ secrets.ENV_DATASOURCE_USERNAME }}" >> $GITHUB_ENV
           echo "ENV_DATASOURCE_PASSWORD=${{ secrets.ENV_DATASOURCE_PASSWORD }}" >> $GITHUB_ENV
@@ -61,7 +63,7 @@ jobs:
           echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> $GITHUB_ENV
           echo "AZURE_STORAGE_BLOB_ENDPOINT=${{ secrets.AZURE_STORAGE_BLOB_ENDPOINT }}" >> $GITHUB_ENV
 
-      # Step 3: Login to Azure
+      # Step 4: Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -69,7 +71,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Step 4: Deploy to Azure Web App
+      # Step 5: Deploy to Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
