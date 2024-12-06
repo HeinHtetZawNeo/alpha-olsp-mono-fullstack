@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AdminCmsProductController {
 
-    private final ProductService productService;
     private static final Logger logger = LoggerFactory.getLogger(AdminCmsProductController.class);
+    private final ProductService productService;
+
     @GetMapping
     public String listProduct(Model model) {
         logger.info("listProduct");
@@ -26,6 +27,7 @@ public class AdminCmsProductController {
         model.addAttribute("products", productService.getAllProducts()); // Replace with actual list of sellers
         return "admin/products";
     }
+
     @GetMapping("/{id}")
     public String getProductDetails(@PathVariable String id, Model model) {
         logger.info("getProductDetails with id {}", id);

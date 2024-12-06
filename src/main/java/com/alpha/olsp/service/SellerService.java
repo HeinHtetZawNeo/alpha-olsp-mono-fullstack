@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface SellerService {
     AuthenticationResponseDto register(Seller seller);
+
     List<Seller> getSellers();
 }

@@ -15,9 +15,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AdminLoginService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AdminLoginService.class);
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final Logger logger = LoggerFactory.getLogger(AdminLoginService.class);
 
     public boolean authenticateAdmin(AdminLoginRequest loginRequest) {
         logger.info("Authenticating Admin User");

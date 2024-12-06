@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 public class AdminCmsLoginController {
 
-    private final AdminLoginService adminLoginService;
     private static final Logger logger = LoggerFactory.getLogger(AdminCmsLoginController.class);
+    private final AdminLoginService adminLoginService;
 
     @GetMapping("/login")
     public String adminLogin() {

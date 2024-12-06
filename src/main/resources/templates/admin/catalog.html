@@ -9,10 +9,10 @@
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="text-center">Manage Catalogs</h1>
         <div>
-            <a href="/cms/v1/admin/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+            <a class="btn btn-secondary" href="/cms/v1/admin/dashboard">Go to Dashboard</a>
             <form action="/cms/v1/admin/logout" method="post" style="display: inline;">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                <button type="submit" class="btn btn-danger">Logout</button>
+                <input name="_csrf" th:value="${_csrf.token}" type="hidden"/>
+                <button class="btn btn-danger" type="submit">Logout</button>
             </form>
         </div>
     </div>
@@ -32,7 +32,8 @@
             <td th:text="${catalog.description}"></td>
             <td>
                 <ul>
-                    <li th:each="subCatalog : ${catalog.subCatalogs}" th:text="${subCatalog.name + ' - ' + subCatalog.description}"></li>
+                    <li th:each="subCatalog : ${catalog.subCatalogs}"
+                        th:text="${subCatalog.name + ' - ' + subCatalog.description}"></li>
                 </ul>
             </td>
         </tr>

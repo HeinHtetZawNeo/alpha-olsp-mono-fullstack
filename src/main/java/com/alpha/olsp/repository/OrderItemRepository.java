@@ -1,6 +1,5 @@
 package com.alpha.olsp.repository;
 
-import com.alpha.olsp.model.Order;
 import com.alpha.olsp.model.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

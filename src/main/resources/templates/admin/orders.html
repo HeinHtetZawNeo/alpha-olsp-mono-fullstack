@@ -9,10 +9,10 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-center">Manage Orders</h1>
         <div>
-            <a href="/cms/v1/admin/dashboard" class="btn btn-secondary">Go Dashboard</a>
-            <form action="/cms/v1/admin/logout" method="post" class="d-inline-block">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                <button type="submit" class="btn btn-danger">Logout</button>
+            <a class="btn btn-secondary" href="/cms/v1/admin/dashboard">Go Dashboard</a>
+            <form action="/cms/v1/admin/logout" class="d-inline-block" method="post">
+                <input name="_csrf" th:value="${_csrf.token}" type="hidden"/>
+                <button class="btn btn-danger" type="submit">Logout</button>
             </form>
         </div>
     </div>
@@ -37,8 +37,8 @@
             <td th:text="${order.createdAt()}"></td>
             <td th:text="${order.updatedAt()}"></td>
             <td>
-                <a href="#" class="btn btn-primary btn-sm">View</a>
-                <a href="#" class="btn btn-danger btn-sm">Cancel</a>
+                <a class="btn btn-primary btn-sm" href="#">View</a>
+                <a class="btn btn-danger btn-sm" href="#">Cancel</a>
             </td>
         </tr>
         </tbody>
