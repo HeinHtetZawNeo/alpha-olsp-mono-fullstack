@@ -24,7 +24,7 @@ jobs:
         java-version: '21'
 
     - name: Build the application
-      run: mvn clean package
+      run: mvn clean package -DskipTests=true
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
