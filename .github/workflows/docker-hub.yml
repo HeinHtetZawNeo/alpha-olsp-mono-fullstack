@@ -1,18 +1,21 @@
-name: Build and Push Docker Image
-
-on:
-  push:
-    branches:
-      - main
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
+
+      # Set up Java environment
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+
+      # Build the JAR file
+      - name: Build with Maven
+        run: mvn clean package
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -21,19 +24,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Determine the image version
-      - name: Set Image Version
-        id: vars
-        run: |
-          IMAGE_TAG=$(git rev-list --count HEAD)
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
       # Build the Docker image
       - name: Build Docker image
-        run: |
-          docker build -t your-dockerhub-username/alpha-olsp:${{ env.IMAGE_TAG }} .
+        run: docker build -t hhzneo/alpha-olsp:${{ env.IMAGE_TAG }} .
 
-      # Push the Docker image to Docker Hub
+      # Push the Docker image
       - name: Push Docker image
-        run: |
-          docker push your-dockerhub-username/alpha-olsp:${{ env.IMAGE_TAG }}
+        run: docker push hhzneo/alpha-olsp:${{ env.IMAGE_TAG }}
