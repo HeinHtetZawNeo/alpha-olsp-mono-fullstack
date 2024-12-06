@@ -33,12 +33,12 @@
 URL- [Miro](https://miro.com/app/board/uXjVLLaCK1s=/?share_link_id=877918259717)
 ![image info](./rsc/ArchitectureDiagram.png)
 # Class Diagram
+![ClassDiagram.jpg](./rsc/ClassDiagram.jpg)
 # ER Diagram
-
-# URLs for Services
-- [User Service](https://github.com/HeinHtetZawNeo/alpha-online-shopping-usrsvc)
+![ERD.jpg](./rsc/ERD.jpg)
 
 # API Design
+
 - {host}/api/v1/auth/login
 
 - POST {host}/api/v1/(a|s|c)/register
