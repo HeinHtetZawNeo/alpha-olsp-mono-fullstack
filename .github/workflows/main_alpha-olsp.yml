@@ -63,3 +63,11 @@ jobs:
           slot-name: 'production'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_d21f3335a9e14d718e1a2cbfa263a218 }}
           images: 'hhzneo/alpha-olsp:${{ github.run_number }}'
+          app-settings: |
+            ENV_JWT_SECRETKEY=${{ secrets.ENV_JWT_SECRETKEY }}
+            ENV_DATASOURCE_URL=${{ secrets.ENV_DATASOURCE_URL }}
+            ENV_DATASOURCE_USERNAME=${{ secrets.ENV_DATASOURCE_USERNAME }}
+            ENV_DATASOURCE_PASSWORD=${{ secrets.ENV_DATASOURCE_PASSWORD }}
+            AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.ENV_AZURE_STORAGE_ACCOUNT_NAME }}
+            AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.ENV_AZURE_STORAGE_ACCOUNT_KEY }}
+            AZURE_STORAGE_BLOB_ENDPOINT=${{ secrets.ENV_AZURE_STORAGE_BLOB_ENDPOINT }}
