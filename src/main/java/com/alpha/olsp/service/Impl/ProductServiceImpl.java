@@ -88,4 +88,15 @@ public class ProductServiceImpl implements ProductService {
 
         return products.map(ProductMapper.INSTANCE::toProductResponseDto);
     }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public Product getProductByProductId(String id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
+    }
 }

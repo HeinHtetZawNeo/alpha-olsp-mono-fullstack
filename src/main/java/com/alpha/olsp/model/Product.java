@@ -45,6 +45,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller; // Seller who owns this product
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
