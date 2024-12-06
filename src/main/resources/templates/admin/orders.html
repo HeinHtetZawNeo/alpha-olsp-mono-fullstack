@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Orders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-center">Manage Orders</h1>
+        <div>
+            <a href="/cms/v1/admin/dashboard" class="btn btn-secondary">Go Dashboard</a>
+            <form action="/cms/v1/admin/logout" method="post" class="d-inline-block">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Ordered At</th>
+            <th>Last Updated At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id()}"></td>
+            <td th:text="${order.customerId()}"></td>
+            <td th:text="${order.totalAmount()}"></td>
+            <td th:text="${order.status()}"></td>
+            <td th:text="${order.createdAt()}"></td>
+            <td th:text="${order.updatedAt()}"></td>
+            <td>
+                <a href="#" class="btn btn-primary btn-sm">View</a>
+                <a href="#" class="btn btn-danger btn-sm">Cancel</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

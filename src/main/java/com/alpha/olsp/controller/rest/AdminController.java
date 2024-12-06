@@ -1,4 +1,4 @@
-package com.alpha.olsp.controller;
+package com.alpha.olsp.controller.rest;
 
 import com.alpha.olsp.dto.response.AuthenticationResponseDto;
 import com.alpha.olsp.model.Admin;

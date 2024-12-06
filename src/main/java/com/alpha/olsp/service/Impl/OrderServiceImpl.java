@@ -3,11 +3,15 @@ package com.alpha.olsp.service.Impl;
 import com.alpha.olsp.dto.request.OrderRequestDto;
 import com.alpha.olsp.dto.response.OrderItemResponseDto;
 import com.alpha.olsp.dto.response.OrderResponseDto;
+import com.alpha.olsp.exception.InvalidInputException;
 import com.alpha.olsp.exception.ResourceNotFoundException;
 import com.alpha.olsp.helper.Util;
 import com.alpha.olsp.mapper.OrderMapper;
 import com.alpha.olsp.model.*;
-import com.alpha.olsp.repository.*;
+import com.alpha.olsp.repository.OrderItemRepository;
+import com.alpha.olsp.repository.OrderRepository;
+import com.alpha.olsp.repository.ProductRepository;
+import com.alpha.olsp.repository.UserRepository;
 import com.alpha.olsp.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -104,7 +108,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDto getOrderById(String id,String authorizationHeader) {
+    public List<OrderResponseDto> getOrders() {
+        return orderRepository.findAll().stream()
+                .map(OrderMapper.INSTANCE::toOrderResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderResponseDto getOrderById(String id, String authorizationHeader) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
@@ -114,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
 
         switch (found.getClass().getSimpleName().toUpperCase()) {
             case "CUSTOMER":
-                if(!order.getCustomer().getUserID().equals(found.getUserID()))
+                if (!order.getCustomer().getUserID().equals(found.getUserID()))
                     throw new BadCredentialsException("Invalid user");
                 break;
             case "SELLER":
@@ -140,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
         // Validate the allowed status transitions
         OrderItemStatus currentStatus = orderItem.getStatus();
         if (!isValidStatusTransition(currentStatus, status)) {
-            throw new IllegalStateException("Invalid status transition: " + currentStatus + " -> " + status);
+            throw new InvalidInputException("Invalid status transition: " + currentStatus + " -> " + status);
         }
 
         // Update the status of the OrderItem

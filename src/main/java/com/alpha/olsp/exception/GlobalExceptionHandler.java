@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class) // Catch-all for unexpected exceptions
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
         logger.error("Unhandled exception: {}", ex.getMessage(), ex);
-        return new ResponseEntity<>(new ErrorResponse("INTERNAL_ERROR_GATEWAY", "An unexpected error occurred: " + ex.getClass().getSimpleName()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ErrorResponse("BAD_REQUEST", "An unexpected error occurred: " + ex.getClass().getSimpleName()), HttpStatus.BAD_REQUEST);
     }
 
     // ErrorResponse is a helper class for structured error responses
